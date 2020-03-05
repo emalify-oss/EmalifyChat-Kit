@@ -1,0 +1,3 @@
+rootProject.name='roamsdk'
+include ':app'
+include ':roamtechsdk'
