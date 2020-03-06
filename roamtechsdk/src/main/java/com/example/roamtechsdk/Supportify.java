@@ -19,6 +19,8 @@ import android.widget.ImageView;
 import android.widget.Toast;
 
 import com.bumptech.glide.Glide;
+import com.example.roamtechsdk.Model.Message;
+import com.example.roamtechsdk.Model.MessagePojo;
 import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.OnSuccessListener;
 import com.google.android.gms.tasks.Task;
@@ -33,8 +35,6 @@ import com.google.firebase.firestore.QuerySnapshot;
 import com.google.firebase.iid.FirebaseInstanceId;
 import com.google.firebase.storage.FirebaseStorage;
 import com.google.firebase.storage.UploadTask;
-import com.example.roamtechsdk.Model.Message;
-import com.example.roamtechsdk.Model.MessagePojo;
 import com.stfalcon.chatkit.commons.ImageLoader;
 import com.stfalcon.chatkit.messages.MessageInput;
 import com.stfalcon.chatkit.messages.MessagesList;
@@ -65,6 +65,41 @@ public class Supportify extends AppCompatActivity {
 
     MessagesList messagesList;
     MessageInput input;
+    public static int getResourceIdByName(String packageName, String className, String name) {
+        Class r = null;
+        int id = 0;
+        try {
+            r = Class.forName(packageName + ".R");
+
+            Class[] classes = r.getClasses();
+            Class desireClass = null;
+
+            for (int i = 0; i < classes.length; i++) {
+                if (classes[i].getName().split("\\$")[1].equals(className)) {
+                    desireClass = classes[i];
+
+                    break;
+                }
+            }
+
+            if (desireClass != null) {
+                id = desireClass.getField(name).getInt(desireClass);
+            }
+
+        } catch (ClassNotFoundException e) {
+            e.printStackTrace();
+        } catch (IllegalArgumentException e) {
+            e.printStackTrace();
+        } catch (SecurityException e) {
+            e.printStackTrace();
+        } catch (IllegalAccessException e) {
+            e.printStackTrace();
+        } catch (NoSuchFieldException e) {
+            e.printStackTrace();
+        }
+
+        return id;
+    }
 
     public static void start(Activity activity){
         activity.startActivity(new Intent(activity,Supportify.class));
@@ -99,11 +134,15 @@ public class Supportify extends AppCompatActivity {
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.chat_activity);
+        int id = getResourceIdByName(Supportify.this.getPackageName(), "layout", "chat_activity");
+        setContentView(id);
+//        WallpaperInfo context = null;
+      //  int ids = getResourceIdByName(Supportify.this.getPackageName(), "ToolBar", "toolbar");
         Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
         senderId = Settings.Secure.getString(this.getContentResolver(),
                 Settings.Secure.ANDROID_ID);
+        int idz = getResourceIdByName(Supportify.this.getPackageName(), "MessageList", "messagesList");
         messagesList = findViewById(R.id.messagesList);
         input = findViewById(R.id.input);
         adapter = new MessagesListAdapter<>(senderId, new ImageLoader() {
