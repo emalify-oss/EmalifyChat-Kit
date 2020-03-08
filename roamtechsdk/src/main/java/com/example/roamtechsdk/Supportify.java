@@ -1,4 +1,5 @@
 package com.example.roamtechsdk;
+
 import android.Manifest;
 import android.app.Activity;
 import android.content.DialogInterface;
@@ -21,9 +22,7 @@ import android.widget.Toast;
 import com.bumptech.glide.Glide;
 import com.example.roamtechsdk.Model.Message;
 import com.example.roamtechsdk.Model.MessagePojo;
-import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.OnSuccessListener;
-import com.google.android.gms.tasks.Task;
 import com.google.firebase.firestore.CollectionReference;
 import com.google.firebase.firestore.DocumentChange;
 import com.google.firebase.firestore.DocumentReference;
@@ -48,7 +47,6 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
-import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.appcompat.app.AlertDialog;
 import androidx.appcompat.app.AppCompatActivity;
@@ -257,7 +255,9 @@ public class Supportify extends AppCompatActivity {
 
     private void init() {
         FirebaseFirestore.getInstance()
-                .collection("Chat").orderBy("createdAt").limit(60)
+                .collection("Chat")
+                .whereEqualTo("channel",getEmail()).
+                orderBy("createdAt").limit(60)
                 .addSnapshotListener(new EventListener<QuerySnapshot>() {
                     @Override
                     public void onEvent(QuerySnapshot queryDocumentSnapshots, FirebaseFirestoreException e) {
@@ -286,7 +286,6 @@ public class Supportify extends AppCompatActivity {
                                     return;
                                 }
                                 // Message chat = queryDocumentSnapshots.getDocumentChanges().toObject(MessagePojo.class).getM();
-
                                 for (DocumentChange dc : queryDocumentSnapshots.getDocumentChanges()) {
                                     switch (dc.getType() ) {
                                         case ADDED:
@@ -325,7 +324,6 @@ public class Supportify extends AppCompatActivity {
 //                            adapter.addToStart(chat, true);
 //                        }
 //                    }
-//
 //                }
 //            }
 //        });
@@ -419,14 +417,31 @@ public class Supportify extends AppCompatActivity {
         super.onActivityResult(requestCode, resultCode, data);
         if (requestCode == 9632 && resultCode == RESULT_OK) {
             List<Uri> mSelected = Matisse.obtainResult(data);
-            FirebaseStorage.getInstance().getReference("uploads").putFile(mSelected.get(0)).addOnCompleteListener(new OnCompleteListener<UploadTask.TaskSnapshot>() {
+            final UploadTask uploadTask;
+            uploadTask =  FirebaseStorage.getInstance().getReference("uploads/"+senderId).putFile(mSelected.get(0));
+            uploadTask.addOnSuccessListener(new OnSuccessListener<UploadTask.TaskSnapshot>() {
                 @Override
-                public void onComplete(@NonNull Task<UploadTask.TaskSnapshot> task) {
-                    if (task.isSuccessful()) {
-                        sendMessage(task.getResult().getMetadata().getReference().getDownloadUrl().toString(), true);
-                    }
+                public void onSuccess(UploadTask.TaskSnapshot taskSnapshot) {
+                    taskSnapshot.getStorage().getDownloadUrl().addOnSuccessListener(new OnSuccessListener<Uri>() {
+                        @Override
+                        public void onSuccess(Uri uri) {
+                            String download_url = uri.toString();
+                            sendMessage(download_url, true);
+                        }
+                    });
                 }
             });
+//            FirebaseStorage.getInstance().getReference("uploads/"+senderId).putFile(
+//                    mSelected.get(0)
+//            ).addOnCompleteListener(
+//                    new OnCompleteListener<UploadTask.TaskSnapshot>() {
+//                @Override
+//                public void onComplete(@NonNull Task<UploadTask.TaskSnapshot> task) {
+//                    if (task.isSuccessful()) {
+//                        sendMessage(task.getResult().getDownloadUrl().toString(), true);
+//                    }
+//                }
+//            });
         }
     }
 

@@ -1,6 +1,5 @@
 package com.example.roamtechsdk.Model;
 
-
 import com.google.firebase.database.Exclude;
 
 import java.util.Date;

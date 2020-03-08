@@ -8,6 +8,8 @@ import com.example.roamtechsdk.Supportify;
 
 import androidx.appcompat.app.AppCompatActivity;
 
+//import com.example.roamtechsdk.Supportify;
+
 public class MainActivity extends AppCompatActivity {
     Button fab;
     @Override
@@ -18,6 +20,7 @@ public class MainActivity extends AppCompatActivity {
         fab.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
+
                 Supportify.start(MainActivity.this);
             }
         });
