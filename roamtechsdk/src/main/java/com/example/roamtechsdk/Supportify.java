@@ -226,7 +226,7 @@ public class Supportify extends AppCompatActivity {
                 }).create().show();
     }
 
-    private void initFirebase() {
+    public void initFirebase() {
         final DocumentReference query = FirebaseFirestore.getInstance().collection("Users").document(senderId);
         Map<String, Object> taskMap = new HashMap<String, Object>();
         taskMap.put("status", "ONLINE");
@@ -253,7 +253,7 @@ public class Supportify extends AppCompatActivity {
         FirebaseFirestore.getInstance();
     }
 
-    private void init() {
+    public void init() {
         FirebaseFirestore.getInstance()
                 .collection("Chat")
                 .whereEqualTo("channel",getEmail()).
@@ -382,7 +382,7 @@ public class Supportify extends AppCompatActivity {
     }
 
 
-    private void sendMessage(String message, boolean isImage) {
+    public void sendMessage(String message, boolean isImage) {
         CollectionReference reference = FirebaseFirestore.getInstance().collection("Chat");
         //text
         String test = message;
