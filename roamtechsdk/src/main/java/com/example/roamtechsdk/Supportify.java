@@ -196,7 +196,7 @@ public class Supportify extends AppCompatActivity {
 //                });
     }
     //AlertDialog
-    private void inituserInfo() {
+    public void inituserInfo() {
         View view = getLayoutInflater().inflate(R.layout.supportify_dialog, null);
         final EditText name = view.findViewById(R.id.username);
         final EditText email = view.findViewById(R.id.email);
