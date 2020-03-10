@@ -9,7 +9,12 @@ import java.util.Date;
 /**
  * Created by bliveinhack on 28/9/17.
  */
+import androidx.annotation.Keep;
 
+/**
+ * Created by bliveinhack on 28/9/17.
+ */
+@Keep
 public class Message implements IMessage, MessageContentType.Image  {
 
     /*...*/
