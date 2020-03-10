@@ -1,7 +1,12 @@
 package com.example.roamtechsdk.Model;
 
 import com.stfalcon.chatkit.commons.models.IUser;
+import androidx.annotation.Keep;
 
+/**
+ * Created by bliveinhack on 28/9/17.
+ */
+@Keep
 public class Author implements IUser {
 
     /*...*/
