@@ -404,8 +404,8 @@ public class Supportify extends AppCompatActivity {
         data.put("text", test);
         data.put("file", "");
         data.put("image",tests);
-        data.put("type", message);
-        data.put("meta",   Calendar.getInstance().getTime().getTime()  );
+     //   data.put("type", message);
+     //   data.put("meta",   Calendar.getInstance().getTime().getTime()  );
         data.put("createdAt", Calendar.getInstance().getTime().getTime());
         data.put("id", senderId);
         reference.document().set(data);
