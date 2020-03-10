@@ -21,13 +21,6 @@
 
     </com.google.android.material.appbar.AppBarLayout>
 
-<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
-    xmlns:app="http://schemas.android.com/apk/res-auto"
-    xmlns:tools="http://schemas.android.com/tools"
-    android:id="@+id/relative"
-    android:layout_width="fill_parent"
-    android:layout_height="fill_parent"
-    android:background="@color/white">
 
     <com.stfalcon.chatkit.messages.MessagesList
         android:id="@+id/messagesList"
@@ -54,5 +47,5 @@
         app:inputButtonBackground="@color/grey"
         />
 
-</RelativeLayout>
+
 </androidx.coordinatorlayout.widget.CoordinatorLayout>
