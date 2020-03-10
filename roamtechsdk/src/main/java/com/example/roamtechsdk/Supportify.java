@@ -282,9 +282,9 @@ public class Supportify extends AppCompatActivity {
 //                            adapter.addToStart(chat, true);
 //                        }
                         Message chat = queryDocumentSnapshots.getDocuments().get(1).toObject(MessagePojo.class).getM();
-//                                                if (adapter != null) {
-//                            adapter.addToStart(chat, true);
-//                        }
+                                               if (adapter != null) {
+                           adapter.addToStart(chat, true);
+                       }
                                 if (e != null) {
                                     Log.w( "listen:error:  *** **", e);
                                     return;
