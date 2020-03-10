@@ -212,8 +212,8 @@ public class Supportify extends AppCompatActivity {
                     public void onClick(DialogInterface dialogInterface, int i) {
                         setName(name.getText().toString());
                         setEmail(email.getText().toString());
-                        init();
-                       // initFirebase();
+                       // init();
+                        initFirebase();
 //                        if (email.length() == 0) {
 //                            inituserInfo();
 //                        } else {
