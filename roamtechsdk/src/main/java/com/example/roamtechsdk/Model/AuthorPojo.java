@@ -1,5 +1,10 @@
 package com.example.roamtechsdk.Model;
+import androidx.annotation.Keep;
 
+/**
+ * Created by bliveinhack on 28/9/17.
+ */
+@Keep
 public class AuthorPojo {
 
     /*...*/
