@@ -47,6 +47,7 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
+import androidx.annotation.Keep;
 import androidx.annotation.Nullable;
 import androidx.appcompat.app.AlertDialog;
 import androidx.appcompat.app.AppCompatActivity;
@@ -58,7 +59,7 @@ import androidx.core.content.ContextCompat;
 /**
  * Created by android on 14/8/17.
  */
-
+@Keep
 public class Supportify extends AppCompatActivity {
 
     MessagesList messagesList;
@@ -99,7 +100,8 @@ public class Supportify extends AppCompatActivity {
         return id;
     }
 
-    public static void start(Activity activity){
+
+    public  void start(Activity activity){
         activity.startActivity(new Intent(activity,Supportify.class));
     }
 
@@ -210,12 +212,14 @@ public class Supportify extends AppCompatActivity {
                     public void onClick(DialogInterface dialogInterface, int i) {
                         setName(name.getText().toString());
                         setEmail(email.getText().toString());
-                        if (email.length() == 0) {
-                            inituserInfo();
-                        } else {
-                            init();
-                            initFirebase();
-                        }
+                        init();
+                        initFirebase();
+//                        if (email.length() == 0) {
+//                            inituserInfo();
+//                        } else {
+//                            init();
+//                            initFirebase();
+//                        }
                     }
                 })
                 .setNegativeButton("Cancel", new DialogInterface.OnClickListener() {
@@ -404,8 +408,8 @@ public class Supportify extends AppCompatActivity {
         data.put("text", test);
         data.put("file", "");
         data.put("image",tests);
-     //   data.put("type", message);
-     //   data.put("meta",   Calendar.getInstance().getTime().getTime()  );
+      //  data.put("type", message);
+      //  data.put("meta",   Calendar.getInstance().getTime().getTime()  );
         data.put("createdAt", Calendar.getInstance().getTime().getTime());
         data.put("id", senderId);
         reference.document().set(data);
@@ -465,7 +469,6 @@ public class Supportify extends AppCompatActivity {
                 }
                 return;
             }
-
             // other 'case' lines to check for other
             // permissions this app might request
         }
