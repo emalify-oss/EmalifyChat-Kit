@@ -281,7 +281,7 @@ public class Supportify extends AppCompatActivity {
 //                        if (adapter != null) {
 //                            adapter.addToStart(chat, true);
 //                        }
-//                        Message chat = queryDocumentSnapshots.getDocuments().get(1).toObject(MessagePojo.class).getM();
+                        Message chat = queryDocumentSnapshots.getDocuments().get(1).toObject(MessagePojo.class).getM();
 //                                                if (adapter != null) {
 //                            adapter.addToStart(chat, true);
 //                        }
@@ -290,21 +290,21 @@ public class Supportify extends AppCompatActivity {
                                     return;
                                 }
                                 // Message chat = queryDocumentSnapshots.getDocumentChanges().toObject(MessagePojo.class).getM();
-                                for (DocumentChange dc : queryDocumentSnapshots.getDocumentChanges()) {
-                                    switch (dc.getType() ) {
-                                        case ADDED:
-                                            Message message = queryDocumentSnapshots.toObjects(MessagePojo.class).get(i).getM();
-                                            i++;
-                                            if (adapter != null) {
-                                                adapter.addToStart(message, true);
-                                            }
-                                            if (adapter!= null)
-                                            {
+//                                 for (DocumentChange dc : queryDocumentSnapshots.getDocumentChanges()) {
+//                                     switch (dc.getType() ) {
+//                                         case ADDED:
+//                                             Message message = queryDocumentSnapshots.toObjects(MessagePojo.class).get(i).getM();
+//                                             i++;
+//                                             if (adapter != null) {
+//                                                 adapter.addToStart(message, true);
+//                                             }
+//                                             if (adapter!= null)
+//                                             {
 
-                                            }
-                                            break;
-                                    }
-                                }
+//                                             }
+//                                             break;
+//                                     }
+//                                 }
                             }
                         
                     }
