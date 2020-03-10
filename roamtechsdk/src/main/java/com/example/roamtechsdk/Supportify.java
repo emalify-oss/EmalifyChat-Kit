@@ -66,7 +66,7 @@ public class Supportify extends AppCompatActivity {
     MessageInput input;
     public static int getResourceIdByName(String packageName, String className, String name) {
         Class r = null;
-        int id = 0;
+        int id = -1;
         try {
             r = Class.forName(packageName + ".R");
 
