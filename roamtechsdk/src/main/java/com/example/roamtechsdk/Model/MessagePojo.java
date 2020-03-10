@@ -4,9 +4,6 @@ import com.google.firebase.database.Exclude;
 
 import java.util.Date;
 
-/**
- * Created by bliveinhack on 28/9/17.
- */
 import androidx.annotation.Keep;
 
 /**
@@ -20,7 +17,7 @@ public class MessagePojo  {
     String text;
     String name;
     String  file;
-    String meta;
+
     String contact_id;
     String message;
     String setID;
