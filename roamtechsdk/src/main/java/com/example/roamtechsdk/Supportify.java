@@ -293,7 +293,7 @@ public class Supportify extends AppCompatActivity {
                                 for (DocumentChange dc : queryDocumentSnapshots.getDocumentChanges()) {
                                     switch (dc.getType() ) {
                                         case ADDED:
-                                            Message message = queryDocumentSnapshots.toObjects(MessagePojo.class).get(0).getM();
+                                            Message message = queryDocumentSnapshots.toObjects(MessagePojo.class).get(i).getM();
                                             i++;
                                             if (adapter != null) {
                                                 adapter.addToStart(message, true);
