@@ -6,9 +6,6 @@ import com.stfalcon.chatkit.commons.models.MessageContentType;
 
 import java.util.Date;
 
-/**
- * Created by bliveinhack on 28/9/17.
- */
 import androidx.annotation.Keep;
 
 /**
@@ -22,7 +19,6 @@ public class Message implements IMessage, MessageContentType.Image  {
     String text;
     String name;
     String file;
-    String meta;
     String contact_id;
     String message;
     String setID;
@@ -50,9 +46,6 @@ public class Message implements IMessage, MessageContentType.Image  {
         this.user = user;
     }
 
-    public void setMeta(String meta) {
-        this.meta = meta;
-    }
 
     public void setFile(String file) {
         this.file = file;
@@ -111,9 +104,6 @@ public class Message implements IMessage, MessageContentType.Image  {
     }
     public String getFile() {
         return file;
-    }
-    public String getMeta() {
-        return meta;
     }
     public String getContact_id() {
         return contact_id;
