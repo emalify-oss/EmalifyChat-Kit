@@ -213,7 +213,7 @@ public class Supportify extends AppCompatActivity {
                         setName(name.getText().toString());
                         setEmail(email.getText().toString());
                         init();
-                        initFirebase();
+                       // initFirebase();
 //                        if (email.length() == 0) {
 //                            inituserInfo();
 //                        } else {
