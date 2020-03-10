@@ -265,8 +265,8 @@ public class Supportify extends AppCompatActivity {
                 .addSnapshotListener(new EventListener<QuerySnapshot>() {
                     @Override
                     public void onEvent(QuerySnapshot queryDocumentSnapshots, FirebaseFirestoreException e) {
-                        if(!intialize)
-                        {
+                       
+                      
                             //  intialize = true;
                             // DocumentSnapshot documentSnapshot = new DocumentSnapshot();
                             //   Log.d("Here it is ********",queryDocumentSnapshots.getDocumentChanges().toString());
@@ -306,7 +306,7 @@ public class Supportify extends AppCompatActivity {
                                     }
                                 }
                             }
-                        }
+                        
                     }
                 });
         //FirebaseFirestore.getInstance().collection("Chat").whereEqualTo("setID", senderId).get().
