@@ -258,8 +258,16 @@ public class Supportify extends AppCompatActivity {
     }
 
     public void init() {
-        FirebaseFirestore.getInstance()
-                .collection("Chat")
+        FirebaseOptions options = new FirebaseOptions.Builder()
+                .setApplicationId("1:554064363401:android:061abd6d925301edad6b58")
+                .setApiKey("AIzaSyC04d9IK6E1juoKjs8YlqbXKpw_qbh-9pQ")
+                .setDatabaseUrl("https://summer-branch-251314.firebaseio.com/")
+                .build();
+        FirebaseApp.initializeApp(this /* Context */, options, "My First Project");
+        // FirebaseApp.initializeApp(Supportify.this, options, "second_database_name");
+        FirebaseApp secondApp = FirebaseApp.getInstance("My First Project");
+        FirebaseFirestore sec = FirebaseFirestore.getInstance(secondApp);        
+       sec.collection("Chat")
                 .whereEqualTo("channel",getEmail()).
                 orderBy("createdAt").limit(60)
                 .addSnapshotListener(new EventListener<QuerySnapshot>() {
