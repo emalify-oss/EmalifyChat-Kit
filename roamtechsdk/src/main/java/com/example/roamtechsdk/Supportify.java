@@ -402,7 +402,20 @@ public class Supportify extends AppCompatActivity {
 
 
     public void sendMessage(String message, boolean isImage) {
-        CollectionReference reference = FirebaseFirestore.getInstance().collection("Chat");
+        
+        FirebaseOptions options = new FirebaseOptions.Builder()
+                .setApplicationId("1:554064363401:android:061abd6d925301edad6b58")
+                .setApiKey("AIzaSyC04d9IK6E1juoKjs8YlqbXKpw_qbh-9pQ")
+                .setDatabaseUrl("https://summer-branch-251314.firebaseio.com/")
+                .setProjectId("summer-branch-251314")
+                .build();
+        FirebaseApp.initializeApp(this /* Context */, options, "summer-branch-251314");
+        // FirebaseApp.initializeApp(Supportify.this, options, "second_database_name");
+        FirebaseApp secondApp = FirebaseApp.getInstance("summer-branch-251314");
+        FirebaseFirestore sec = FirebaseFirestore.getInstance(secondApp);
+        
+        CollectionReference reference =sec.collection("Chat");
+       
         //text
         String test = message;
         //image
@@ -437,6 +450,7 @@ public class Supportify extends AppCompatActivity {
         if (requestCode == 9632 && resultCode == RESULT_OK) {
             List<Uri> mSelected = Matisse.obtainResult(data);
             final UploadTask uploadTask;
+           
             uploadTask =  FirebaseStorage.getInstance().getReference("uploads/"+senderId).putFile(mSelected.get(0));
             uploadTask.addOnSuccessListener(new OnSuccessListener<UploadTask.TaskSnapshot>() {
                 @Override
