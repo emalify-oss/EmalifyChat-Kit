@@ -303,6 +303,9 @@ public class Supportify extends AppCompatActivity {
                                     }
                                 }
                             }
+                        else{
+                         Toast.makeText(getApplicationContext(),"Not Able to fetch data.",Toast.LENGTH_SHORT).show();
+                        }
                         
                     }
                 });
