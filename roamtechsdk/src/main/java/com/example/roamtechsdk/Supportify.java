@@ -231,7 +231,18 @@ public class Supportify extends AppCompatActivity {
     }
 
     public void initFirebase() {
-        final DocumentReference query = FirebaseFirestore.getInstance().collection("Users").document(senderId);
+        FirebaseOptions options = new FirebaseOptions.Builder()
+                .setApplicationId("1:554064363401:android:061abd6d925301edad6b58")
+                .setApiKey("AIzaSyC04d9IK6E1juoKjs8YlqbXKpw_qbh-9pQ")
+                .setDatabaseUrl("https://summer-branch-251314.firebaseio.com/")
+                .setProjectId("summer-branch-251314")
+                .build();
+        FirebaseApp.initializeApp(this /* Context */, options, "summer-branch-251314");
+        // FirebaseApp.initializeApp(Supportify.this, options, "second_database_name");
+        FirebaseApp secondApp = FirebaseApp.getInstance("summer-branch-251314");
+        FirebaseFirestore sec = FirebaseFirestore.getInstance(secondApp);
+      
+        final DocumentReference query = sec.collection("Users").document(senderId);
         Map<String, Object> taskMap = new HashMap<String, Object>();
         taskMap.put("status", "ONLINE");
         taskMap.put("name", getName());
@@ -258,15 +269,16 @@ public class Supportify extends AppCompatActivity {
     }
 
     public void init() {
-        FirebaseOptions options = new FirebaseOptions.Builder()
+       FirebaseOptions options = new FirebaseOptions.Builder()
                 .setApplicationId("1:554064363401:android:061abd6d925301edad6b58")
                 .setApiKey("AIzaSyC04d9IK6E1juoKjs8YlqbXKpw_qbh-9pQ")
                 .setDatabaseUrl("https://summer-branch-251314.firebaseio.com/")
+                .setProjectId("summer-branch-251314")
                 .build();
-        FirebaseApp.initializeApp(this /* Context */, options, "My First Project");
+        FirebaseApp.initializeApp(this /* Context */, options, "summer-branch-251314");
         // FirebaseApp.initializeApp(Supportify.this, options, "second_database_name");
-        FirebaseApp secondApp = FirebaseApp.getInstance("My First Project");
-        FirebaseFirestore sec = FirebaseFirestore.getInstance(secondApp);        
+        FirebaseApp secondApp = FirebaseApp.getInstance("summer-branch-251314");
+        FirebaseFirestore sec = FirebaseFirestore.getInstance(secondApp);
        sec.collection("Chat")
                 .whereEqualTo("channel",getEmail()).
                 orderBy("createdAt").limit(60)
