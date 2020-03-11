@@ -23,6 +23,8 @@ import com.bumptech.glide.Glide;
 import com.example.roamtechsdk.Model.Message;
 import com.example.roamtechsdk.Model.MessagePojo;
 import com.google.android.gms.tasks.OnSuccessListener;
+import com.google.firebase.FirebaseApp;
+import com.google.firebase.FirebaseOptions;
 import com.google.firebase.firestore.CollectionReference;
 import com.google.firebase.firestore.DocumentChange;
 import com.google.firebase.firestore.DocumentReference;
@@ -66,7 +68,7 @@ public class Supportify extends AppCompatActivity {
     MessageInput input;
     public static int getResourceIdByName(String packageName, String className, String name) {
         Class r = null;
-        int id = -1;
+        int id = 0;
         try {
             r = Class.forName(packageName + ".R");
 
@@ -134,15 +136,16 @@ public class Supportify extends AppCompatActivity {
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+
         int id = getResourceIdByName(Supportify.this.getPackageName(), "layout", "chat_activity");
         setContentView(id);
 //        WallpaperInfo context = null;
       //  int ids = getResourceIdByName(Supportify.this.getPackageName(), "ToolBar", "toolbar");
-        Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
+        Toolbar toolbar = findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
         senderId = Settings.Secure.getString(this.getContentResolver(),
                 Settings.Secure.ANDROID_ID);
-        int idz = getResourceIdByName(Supportify.this.getPackageName(), "MessageList", "messagesList");
+     //   int idz = getResourceIdByName(Supportify.this.getPackageName(), "MessageList", "messagesList");
         messagesList = findViewById(R.id.messagesList);
         input = findViewById(R.id.input);
         adapter = new MessagesListAdapter<>(senderId, new ImageLoader() {
@@ -159,6 +162,7 @@ public class Supportify extends AppCompatActivity {
             initFirebase();
         }
     }
+
 
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
@@ -212,14 +216,14 @@ public class Supportify extends AppCompatActivity {
                     public void onClick(DialogInterface dialogInterface, int i) {
                         setName(name.getText().toString());
                         setEmail(email.getText().toString());
-                        init();
-                      //  initFirebase();
-//                        if (email.length() == 0) {
-//                            inituserInfo();
-//                        } else {
-//                            init();
-//                            initFirebase();
-//                        }
+                      //  init();
+                    //    initFirebase();
+                        if (email.length() == 0) {
+                            inituserInfo();
+                        } else {
+                            init();
+                            initFirebase();
+                        }
                     }
                 })
                 .setNegativeButton("Cancel", new DialogInterface.OnClickListener() {
@@ -231,18 +235,7 @@ public class Supportify extends AppCompatActivity {
     }
 
     public void initFirebase() {
-        FirebaseOptions options = new FirebaseOptions.Builder()
-                .setApplicationId("1:554064363401:android:061abd6d925301edad6b58")
-                .setApiKey("AIzaSyC04d9IK6E1juoKjs8YlqbXKpw_qbh-9pQ")
-                .setDatabaseUrl("https://summer-branch-251314.firebaseio.com/")
-                .setProjectId("summer-branch-251314")
-                .build();
-        FirebaseApp.initializeApp(this /* Context */, options, "summer-branch-251314");
-        // FirebaseApp.initializeApp(Supportify.this, options, "second_database_name");
-        FirebaseApp secondApp = FirebaseApp.getInstance("summer-branch-251314");
-        FirebaseFirestore sec = FirebaseFirestore.getInstance(secondApp);
-      
-        final DocumentReference query = sec.collection("Users").document(senderId);
+        final DocumentReference query = FirebaseFirestore.getInstance().collection("Users").document(senderId);
         Map<String, Object> taskMap = new HashMap<String, Object>();
         taskMap.put("status", "ONLINE");
         taskMap.put("name", getName());
@@ -269,7 +262,7 @@ public class Supportify extends AppCompatActivity {
     }
 
     public void init() {
-       FirebaseOptions options = new FirebaseOptions.Builder()
+        FirebaseOptions options = new FirebaseOptions.Builder()
                 .setApplicationId("1:554064363401:android:061abd6d925301edad6b58")
                 .setApiKey("AIzaSyC04d9IK6E1juoKjs8YlqbXKpw_qbh-9pQ")
                 .setDatabaseUrl("https://summer-branch-251314.firebaseio.com/")
@@ -282,11 +275,12 @@ public class Supportify extends AppCompatActivity {
        sec.collection("Chat")
                 .whereEqualTo("channel",getEmail()).
                 orderBy("createdAt").limit(60)
-                .addSnapshotListener(new EventListener<QuerySnapshot>() {
+                .addSnapshotListener(
+                        new EventListener<QuerySnapshot>() {
                     @Override
                     public void onEvent(QuerySnapshot queryDocumentSnapshots, FirebaseFirestoreException e) {
-                       
-                      
+                        if(!intialize)
+                        {
                             //  intialize = true;
                             // DocumentSnapshot documentSnapshot = new DocumentSnapshot();
                             //   Log.d("Here it is ********",queryDocumentSnapshots.getDocumentChanges().toString());
@@ -301,10 +295,10 @@ public class Supportify extends AppCompatActivity {
 //                        if (adapter != null) {
 //                            adapter.addToStart(chat, true);
 //                        }
-                       // Message chat = queryDocumentSnapshots.getDocuments().get(1).toObject(MessagePojo.class).getM();
-                       //                        if (adapter != null) {
-                        //  adapter.addToStart(chat, true);
-                   //    }
+//                Message chat = queryDocumentSnapshots.getDocuments().get(1).toObject(MessagePojo.class).getM();
+//                                                if (adapter != null) {
+//                            adapter.addToStart(chat, true);
+//                        }
                                 if (e != null) {
                                     Log.w( "listen:error:  *** **", e);
                                     return;
@@ -318,15 +312,16 @@ public class Supportify extends AppCompatActivity {
                                             if (adapter != null) {
                                                 adapter.addToStart(message, true);
                                             }
-                                          
                                             break;
                                     }
                                 }
                             }
-                        else{
-                         Toast.makeText(getApplicationContext(),"Not Able to fetch data.",Toast.LENGTH_SHORT).show();
+                            else
+                                {
+                                    Toast.makeText(getApplicationContext(),"Not Able to fetch data.",Toast.LENGTH_SHORT).show();
+
+                                }
                         }
-                        
                     }
                 });
         //FirebaseFirestore.getInstance().collection("Chat").whereEqualTo("setID", senderId).get().
