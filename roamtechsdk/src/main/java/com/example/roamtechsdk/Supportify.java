@@ -26,7 +26,9 @@ import android.widget.Toast;
 import com.bumptech.glide.Glide;
 import com.example.roamtechsdk.Model.Message;
 import com.example.roamtechsdk.Model.MessagePojo;
+import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.OnSuccessListener;
+import com.google.android.gms.tasks.Task;
 import com.google.firebase.FirebaseApp;
 import com.google.firebase.FirebaseOptions;
 import com.google.firebase.firestore.CollectionReference;
@@ -57,6 +59,7 @@ import java.util.Map;
 import java.util.TimeZone;
 
 import androidx.annotation.Keep;
+import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.appcompat.app.AlertDialog;
 import androidx.appcompat.app.AppCompatActivity;
@@ -138,8 +141,7 @@ public class Supportify extends AppCompatActivity {
     }
 
     private boolean intialize = false;
-    String Colors = "";
-    String Title = "";
+    String Key = "";
 
     public void changeStatusBarColor(String hexColor) {
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
@@ -149,9 +151,9 @@ public class Supportify extends AppCompatActivity {
         }
     }
 
-        MessagesListAdapter<Message> adapter;
+    MessagesListAdapter<Message> adapter;
     private String senderId;
-    int i = 0;
+    int i = -1;
 
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
@@ -163,17 +165,12 @@ public class Supportify extends AppCompatActivity {
                 .setProjectId("summer-branch-251314")
                 .setStorageBucket("summer-branch-251314.appspot.com")
                 .build();
-        try {
+        try{
             FirebaseApp.initializeApp(this /* Context */, options, "summer-branch-251314");
         }catch (IllegalStateException e)
         {
             FirebaseInstanceId.getInstance(FirebaseApp.getInstance("summer-branch-251314"));
         }
-
-
-
-
-
         int id = getResourceIdByName(Supportify.this.getPackageName(), "layout", "chat_activity");
         setContentView(id);
         Intent intent = getIntent();
@@ -181,7 +178,8 @@ public class Supportify extends AppCompatActivity {
         setSupportActionBar(toolbar);
         setTitle(intent.getStringExtra("Title"));
         toolbar.setBackgroundColor(Color.parseColor(intent.getStringExtra("ToolBar_Color")));
-        changeStatusBarColor(intent.getStringExtra("ToolBar_Color"));
+        changeStatusBarColor(intent.getStringExtra("StatusBar_Color"));
+        Key = intent.getStringExtra("Key");
         senderId = Settings.Secure.getString(this.getContentResolver(),
                 Settings.Secure.ANDROID_ID);
         messagesList = findViewById(R.id.messagesList);
@@ -193,60 +191,38 @@ public class Supportify extends AppCompatActivity {
             }
         });
         messagesList.setAdapter(adapter);
-        if (getEmail() == null) {
-            inituserInfo();
-        } else {
-            FirebaseApp secondApp = FirebaseApp.getInstance("summer-branch-251314");
-            FirebaseFirestore sec = FirebaseFirestore.getInstance(secondApp);
-            sec.collection("messages")
-                    .whereEqualTo("channel","mobile-sdk").
-                    whereEqualTo("email", getEmail()).
-                    orderBy("created_at").limit(250)
-                    .addSnapshotListener(
-                            new EventListener<QuerySnapshot>() {
-                                @Override
-                                public void onEvent(QuerySnapshot queryDocumentSnapshots, FirebaseFirestoreException e) {
-                                    if(!intialize)
-                                    {
-                                        //  intialize = true;
-                                        if(!queryDocumentSnapshots.isEmpty())
-                                        {
-                                            if (e != null) {
-                                                Log.w( "listen:error:  *** **", e);
-                                                return;
-                                            }
-                                            for (DocumentChange dc : queryDocumentSnapshots.getDocumentChanges()) {
-                                                switch (dc.getType() ) {
-                                                    case ADDED:
-                                                        Message message = queryDocumentSnapshots.toObjects(MessagePojo.class).get(i).getM();
-                                                        i++;
-                                                        if (adapter != null) {
-                                                            adapter.addToStart(message, true);
-                                                        }
-                                                        break;
-                                                }
-                                            }
-                                        }
-                                        else
-                                        {
-                                            Toast.makeText(getApplicationContext(),"Not Able to fetch data.",Toast.LENGTH_SHORT).show();
+        //check for the Key.
+        FirebaseApp secondApp = FirebaseApp.getInstance("summer-branch-251314");
+        FirebaseFirestore sec = FirebaseFirestore.getInstance(secondApp);
+        sec.collection("Key").whereEqualTo("key1", Key).get().addOnCompleteListener(new OnCompleteListener<QuerySnapshot>() {
+            @Override
+            public void onComplete(@NonNull Task<QuerySnapshot> task) {
+                //IF KEY IS  FOUND...
+           if(task.getResult().size() != 0 )
+           {
+               if (getEmail() == null)
+               {
+                   inituserInfo();
+               }
+               else {
 
-                                        }
-                                    }
-                                }
-                            });
-            init();
-            initFirebase();
-        }
+                   init();
+                   initFirebase();
+               }
+           }
+           else
+               {
+                   Toast.makeText(getApplicationContext(),"This chat is Disabled.",Toast.LENGTH_SHORT).show();
+               }
+            }
+        });
+
     }
-
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
         // Inflate the menu; this adds items to the action bar if it is present.
         //getMenuInflater().inflate(R.menu.menu_main, menu);
         menu.add(0,1,1,"Profile");
-        menu.add(0,2,1,"Logout");
-
         return true;
     }
 
@@ -302,24 +278,15 @@ public class Supportify extends AppCompatActivity {
                         }
                     }
                 })
-                .setNegativeButton("Cancel", new DialogInterface.OnClickListener() {
-                    @Override
-                    public void onClick(DialogInterface dialogInterface, int i) {
-                        finish();
-                    }
-                }).create().show();
+                .create().show();
     }
 
+    //init to fetch data and display.
     public void initFirebase() {
-
-
         TimeZone tz =  TimeZone.getDefault();
-
-
         // FirebaseApp.initializeApp(Supportify.this, options, "second_database_name");
         FirebaseApp secondApp = FirebaseApp.getInstance("summer-branch-251314");
         FirebaseFirestore sec = FirebaseFirestore.getInstance(secondApp);
-
         final DocumentReference query = sec.collection("Contacts").document(senderId);
         Map<String, Object> taskMap = new HashMap<String, Object>();
         taskMap.put("status", "ONLINE");
@@ -343,22 +310,46 @@ public class Supportify extends AppCompatActivity {
             }
         });
     }
-//
-//    @Override
-//    protected void onStop() {
-//        super.onStop();
-//        FirebaseFirestore.getInstance();
-//    }
-//
-//    @Override
-//    protected void onStart() {
-//        super.onStart();
-//        FirebaseFirestore.getInstance();
-//    }
-
+//listens to the input
     public void init() {
-        // FirebaseApp.initializeApp(Supportify.this, options, "second_database_name");
-
+        FirebaseApp secondApp = FirebaseApp.getInstance("summer-branch-251314");
+        FirebaseFirestore sec = FirebaseFirestore.getInstance(secondApp);
+        sec.collection("messages")
+                .whereEqualTo("channel","mobile-sdk").
+                whereEqualTo("email", getEmail()).
+                orderBy("created_at").limit(250)
+                .addSnapshotListener(
+                        new EventListener<QuerySnapshot>() {
+                            @Override
+                            public void onEvent(QuerySnapshot queryDocumentSnapshots, FirebaseFirestoreException e) {
+                                if(!intialize)
+                                {
+                                    //  intialize = true;
+                                    if(!queryDocumentSnapshots.isEmpty())
+                                    {
+                                        if (e != null) {
+                                            Log.w( "listen:error:  *** **", e);
+                                            return;
+                                        }
+                                        for (DocumentChange dc : queryDocumentSnapshots.getDocumentChanges()) {
+                                            switch (dc.getType() ) {
+                                                case ADDED:
+                                                    i++;
+                                                    Message message = queryDocumentSnapshots.toObjects(MessagePojo.class).get(i).getM();
+                                                    if (adapter != null) {
+                                                        adapter.addToStart(message, true);
+                                                    }
+                                                    break;
+                                            }
+                                        }
+                                    }
+                                    else
+                                    {
+                                        Toast.makeText(getApplicationContext(),"Welcome,type something to begin chat.",Toast.LENGTH_SHORT).show();
+                                    }
+                                }
+                            }
+                        });
         input.setInputListener(new MessageInput.InputListener() {
             @Override
             public boolean onSubmit(CharSequence input) {
@@ -366,12 +357,11 @@ public class Supportify extends AppCompatActivity {
                 return true;
             }
         });
-
+//listens for any attachments
         input.setAttachmentsListener(new MessageInput.AttachmentsListener() {
             @Override
             public void onAddAttachments() {
                 //select attachments
-
                 if (ContextCompat.checkSelfPermission(Supportify.this,
                         Manifest.permission.WRITE_EXTERNAL_STORAGE)
                         != PackageManager.PERMISSION_GRANTED) {
@@ -382,13 +372,10 @@ public class Supportify extends AppCompatActivity {
                         // this thread waiting for the user's response! After the user
                         // sees the explanation, try again to request the permission.
                     } else {
-
                         // No explanation needed, we can request the permission.
-
                         ActivityCompat.requestPermissions(Supportify.this,
                                 new String[]{Manifest.permission.WRITE_EXTERNAL_STORAGE},
                                 8888);
-
                         // MY_PERMISSIONS_REQUEST_READ_CONTACTS is an
                         // app-defined int constant. The callback method gets the
                         // result of the request.
@@ -407,14 +394,12 @@ public class Supportify extends AppCompatActivity {
         });
     }
 
-
+//to send a message to the database
     public void sendMessage(String message, boolean isImage) {
 
+        //get timestamp
         SimpleDateFormat simpleDateFormat  = new SimpleDateFormat("YYYY-MM-DD HH:mm:ss ");
         String format = simpleDateFormat.format(new Date());
-
-
-        // FirebaseApp.initializeApp(Supportify.this, options, "second_database_name");
         FirebaseApp secondApp = FirebaseApp.getInstance("summer-branch-251314");
         FirebaseFirestore sec = FirebaseFirestore.getInstance(secondApp);
         CollectionReference reference =sec.collection("messages");
@@ -458,19 +443,15 @@ public class Supportify extends AppCompatActivity {
         reference.document().set(data);
 
     }
-
+//to send a picture to database.
     @Override
     public void onActivityResult(int requestCode, int resultCode, Intent data) {
         super.onActivityResult(requestCode, resultCode, data);
         if (requestCode == 9632 && resultCode == RESULT_OK) {
             List<Uri> mSelected = Matisse.obtainResult(data);
-            //FirebaseApp.initializeApp(Supportify.this, options, "second_database_name");gs://summer-branch-251314.appspot.com
-            FirebaseApp secondApp = FirebaseApp.getInstance("summer-branch-251314");
-            //FirebaseFirestore sec = FirebaseFirestore.getInstance(secondApp);
-            //FirebaseFirestore ces = FirebaseFirestore.getInstance(secondApp);
-            FirebaseStorage ces = FirebaseStorage.getInstance(secondApp);
 
-           // CollectionReference reference =sec.collection("Chat");
+            FirebaseApp secondApp = FirebaseApp.getInstance("summer-branch-251314");
+            FirebaseStorage ces = FirebaseStorage.getInstance(secondApp);
             final UploadTask uploadTask;
             uploadTask =  ces.getReference("uploads/"+senderId+Calendar.getInstance().getTime().getTime()).putFile(mSelected.get(0));
             uploadTask.addOnSuccessListener(new OnSuccessListener<UploadTask.TaskSnapshot>() {
@@ -485,20 +466,10 @@ public class Supportify extends AppCompatActivity {
                     });
                 }
             });
-//            FirebaseStorage.getInstance().getReference("uploads/"+senderId).putFile(
-//                    mSelected.get(0)
-//            ).addOnCompleteListener(
-//                    new OnCompleteListener<UploadTask.TaskSnapshot>() {
-//                @Override
-//                public void onComplete(@NonNull Task<UploadTask.TaskSnapshot> task) {
-//                    if (task.isSuccessful()) {
-//                        sendMessage(task.getResult().getDownloadUrl().toString(), true);
-//                    }
-//                }
-//            });
         }
     }
 
+    //request for accessing the mobile local gallery
     @Override
     public void onRequestPermissionsResult(int requestCode,String permissions[], int[] grantResults) {
         switch (requestCode) {
