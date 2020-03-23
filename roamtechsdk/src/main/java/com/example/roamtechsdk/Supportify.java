@@ -21,16 +21,18 @@ import android.view.Window;
 import android.view.WindowManager;
 import android.widget.EditText;
 import android.widget.ImageView;
+import android.widget.RelativeLayout;
 import android.widget.Toast;
 
 import com.bumptech.glide.Glide;
-import com.example.roamtechsdk.Model.Message;
-import com.example.roamtechsdk.Model.MessagePojo;
 import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.OnSuccessListener;
 import com.google.android.gms.tasks.Task;
 import com.google.firebase.FirebaseApp;
 import com.google.firebase.FirebaseOptions;
+import com.google.firebase.auth.AuthResult;
+import com.google.firebase.auth.FirebaseAuth;
+import com.google.firebase.auth.FirebaseUser;
 import com.google.firebase.firestore.CollectionReference;
 import com.google.firebase.firestore.DocumentChange;
 import com.google.firebase.firestore.DocumentReference;
@@ -42,6 +44,8 @@ import com.google.firebase.firestore.QuerySnapshot;
 import com.google.firebase.iid.FirebaseInstanceId;
 import com.google.firebase.storage.FirebaseStorage;
 import com.google.firebase.storage.UploadTask;
+import com.example.roamtechsdk.Model.Message;
+import com.example.roamtechsdk.Model.MessagePojo;
 import com.stfalcon.chatkit.commons.ImageLoader;
 import com.stfalcon.chatkit.messages.MessageInput;
 import com.stfalcon.chatkit.messages.MessagesList;
@@ -69,53 +73,16 @@ import androidx.core.content.ContextCompat;
 
 
 /**
- * Created by android on 14/8/17.
+ * Created by dennis on 16/3/20.
  */
 @Keep
 public class Supportify extends AppCompatActivity {
 
     MessagesList messagesList;
+    private FirebaseAuth mAuth;
     MessageInput input;
 
-
-    public static int getResourceIdByName(String packageName, String className, String name) {
-        Class r = null;
-        int id = 0;
-        try {
-            r = Class.forName(packageName + ".R");
-
-            Class[] classes = r.getClasses();
-            Class desireClass = null;
-
-            for (int i = 0; i < classes.length; i++) {
-                if (classes[i].getName().split("\\$")[1].equals(className)) {
-                    desireClass = classes[i];
-
-                    break;
-                }
-            }
-
-            if (desireClass != null) {
-                id = desireClass.getField(name).getInt(desireClass);
-            }
-
-        } catch (ClassNotFoundException e) {
-            e.printStackTrace();
-        } catch (IllegalArgumentException e) {
-            e.printStackTrace();
-        } catch (SecurityException e) {
-            e.printStackTrace();
-        } catch (IllegalAccessException e) {
-            e.printStackTrace();
-        } catch (NoSuchFieldException e) {
-            e.printStackTrace();
-        }
-
-        return id;
-    }
-
-
-    public void start(Activity activity) {
+    public static void start(Activity activity) {
         activity.startActivity(new Intent(activity, Supportify.class));
     }
 
@@ -142,6 +109,7 @@ public class Supportify extends AppCompatActivity {
 
     private boolean intialize = false;
     String Key = "";
+    String Key_2 = "";
 
     public void changeStatusBarColor(String hexColor) {
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
@@ -156,33 +124,62 @@ public class Supportify extends AppCompatActivity {
     int i = -1;
 
     @Override
-    protected void onCreate(@Nullable Bundle savedInstanceState) {
+    protected void  onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         FirebaseOptions options = new FirebaseOptions.Builder()
-                .setApplicationId("1:554064363401:android:061abd6d925301edad6b58")
-                .setApiKey("AIzaSyC04d9IK6E1juoKjs8YlqbXKpw_qbh-9pQ")
-                .setDatabaseUrl("https://summer-branch-251314.firebaseio.com/")
-                .setProjectId("summer-branch-251314")
-                .setStorageBucket("summer-branch-251314.appspot.com")
+                .setApplicationId("1:677565980513:android:1342f1bc8ac6f756ddaf20")
+                .setApiKey("AIzaSyBFliq3oTDIVSFrnrFQjqcLO5IHLvBPhgo")
+                .setDatabaseUrl("https://emalifychat.firebaseio.com/")
+                .setProjectId("emalifychat")
+                .setStorageBucket("emalifychat.appspot.com")
                 .build();
         try{
-            FirebaseApp.initializeApp(this /* Context */, options, "summer-branch-251314");
+            FirebaseApp.initializeApp(this /* Context */, options, "emalifychat");
+            FirebaseApp app =  FirebaseApp.initializeApp(this /* Context */, options, "emalifychat");
+            mAuth = FirebaseAuth.getInstance(app);
+            mAuth.signInAnonymously()
+                    .addOnCompleteListener(this, new OnCompleteListener<AuthResult>() {
+                        @Override
+                        public void onComplete(@NonNull Task<AuthResult> task) {
+                            if (task.isSuccessful()) {
+                                // Sign in success, update UI with the signed-in user's information
+                                //  Log.d( "signInAnonymously:success");
+                                Toast.makeText(getApplicationContext(), "Authentication successful.",
+                                        Toast.LENGTH_SHORT).show();
+                                FirebaseUser user = mAuth.getCurrentUser();
+                                //  updateUI(user);
+                            } else {
+                                // If sign in fails, display a message to the user.
+                                //  Log.w(TAG, "signInAnonymously:failure", task.getException());
+                                Toast.makeText(getApplicationContext(), "Authentication failed.",
+                                        Toast.LENGTH_SHORT).show();
+                                //  updateUI(null);
+                            }
+                        }
+                    });
+
         }catch (IllegalStateException e)
         {
-            FirebaseInstanceId.getInstance(FirebaseApp.getInstance("summer-branch-251314"));
+            FirebaseInstanceId.getInstance(FirebaseApp.getInstance("emalifychat"));
         }
-        int id = getResourceIdByName(Supportify.this.getPackageName(), "layout", "chat_activity");
-        setContentView(id);
+        setContentView(R.layout.chat_activity);
         Intent intent = getIntent();
         Toolbar toolbar = findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
         setTitle(intent.getStringExtra("Title"));
         toolbar.setBackgroundColor(Color.parseColor(intent.getStringExtra("ToolBar_Color")));
         changeStatusBarColor(intent.getStringExtra("StatusBar_Color"));
-        Key = intent.getStringExtra("Key");
+        Key = intent.getStringExtra("Key_1");
+        Key_2 = intent.getStringExtra("Key_2");
+
+
         senderId = Settings.Secure.getString(this.getContentResolver(),
                 Settings.Secure.ANDROID_ID);
         messagesList = findViewById(R.id.messagesList);
+        //find background image path.
+        RelativeLayout free = findViewById(R.id.relative);
+        int resId = this.getResources().getIdentifier("back", "drawable", this.getPackageName());
+               free.setBackgroundResource(intent.getIntExtra("image_id_resource",resId ));
         input = findViewById(R.id.input);
         adapter = new MessagesListAdapter<>(senderId, new ImageLoader() {
             @Override
@@ -192,31 +189,27 @@ public class Supportify extends AppCompatActivity {
         });
         messagesList.setAdapter(adapter);
         //check for the Key.
-        FirebaseApp secondApp = FirebaseApp.getInstance("summer-branch-251314");
+        FirebaseApp secondApp = FirebaseApp.getInstance("emalifychat");
         FirebaseFirestore sec = FirebaseFirestore.getInstance(secondApp);
-        sec.collection("Key").whereEqualTo("key1", Key).get().addOnCompleteListener(new OnCompleteListener<QuerySnapshot>() {
-            @Override
-            public void onComplete(@NonNull Task<QuerySnapshot> task) {
-                //IF KEY IS  FOUND...
-           if(task.getResult().size() != 0 )
-           {
-               if (getEmail() == null)
-               {
-                   inituserInfo();
-               }
-               else {
-
-                   init();
-                   initFirebase();
-               }
-           }
-           else
-               {
-                   Toast.makeText(getApplicationContext(),"This chat is Disabled.",Toast.LENGTH_SHORT).show();
-               }
-            }
-        });
-
+        sec.collection("applications").whereEqualTo("app_id", Key)
+                .whereEqualTo("customer_account",Integer.parseInt(Key_2))
+                .get()
+                .addOnCompleteListener(new OnCompleteListener<QuerySnapshot>()
+                                       {
+                                           @Override
+                                           public void onComplete(@NonNull Task<QuerySnapshot> task) {
+                                                   if (getEmail() == null)
+                                                   {
+                                                       inituserInfo();
+                                                   }
+                                                   else
+                                                   {
+                                                       init();
+                                                       initFirebase();
+                                                   }
+                                           }
+                                       }
+                );
     }
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
@@ -225,7 +218,6 @@ public class Supportify extends AppCompatActivity {
         menu.add(0,1,1,"Profile");
         return true;
     }
-
     @Override
     public boolean onOptionsItemSelected(MenuItem item) {
         // Handle action bar item clicks here. The action bar will
@@ -238,23 +230,13 @@ public class Supportify extends AppCompatActivity {
             inituserInfo();
             return true;
         } else if (id == 2) {
-            logout();
+            //logout();
         }
 
         return super.onOptionsItemSelected(item);
     }
-
-    private void logout() {
-//        FirebaseFirestore.getInstance().collection("Chat").document(senderId).
-//                delete(new DatabaseReference.CompletionListener() {
-//                    @Override
-//                    public void onComplete(DatabaseError databaseError, DatabaseReference databaseReference) {
-//                        finish();
-//                    }
-//                });
-    }
     //AlertDialog
-    public void inituserInfo() {
+    private void inituserInfo() {
         View view = getLayoutInflater().inflate(R.layout.supportify_dialog, null);
         final EditText name = view.findViewById(R.id.username);
         final EditText email = view.findViewById(R.id.email);
@@ -266,10 +248,9 @@ public class Supportify extends AppCompatActivity {
                 .setPositiveButton("Set", new DialogInterface.OnClickListener() {
                     @Override
                     public void onClick(DialogInterface dialogInterface, int i) {
+                        //first check the email before being able to continue.
                         setName(name.getText().toString());
                         setEmail(email.getText().toString());
-                      //  init();
-                    //    initFirebase();
                         if (email.length() == 0) {
                             inituserInfo();
                         } else {
@@ -280,29 +261,31 @@ public class Supportify extends AppCompatActivity {
                 })
                 .create().show();
     }
-
     //init to fetch data and display.
-    public void initFirebase() {
-        TimeZone tz =  TimeZone.getDefault();
-        // FirebaseApp.initializeApp(Supportify.this, options, "second_database_name");
-        FirebaseApp secondApp = FirebaseApp.getInstance("summer-branch-251314");
+    private void initFirebase() {
+
+        FirebaseApp secondApp = FirebaseApp.getInstance("emalifychat");
         FirebaseFirestore sec = FirebaseFirestore.getInstance(secondApp);
-        final DocumentReference query = sec.collection("Contacts").document(senderId);
+        final DocumentReference query = sec.collection("contacts").document(senderId);
         Map<String, Object> taskMap = new HashMap<String, Object>();
         taskMap.put("status", "ONLINE");
         taskMap.put("name", getName());
+        taskMap.put("channel", "mobilechat");
         taskMap.put("Ip", senderId);
         taskMap.put("id",senderId);
+        taskMap.put("contact_id", senderId+Key_2);
+        taskMap.put("customer_account", Integer.parseInt(Key_2));
         taskMap.put("Org","");
-        taskMap.put("timezone",tz.getID());
+        taskMap.put("created_at", String.valueOf(Calendar.getInstance().getTime().getTime()).substring(0,10));
+        taskMap.put("updated_at", String.valueOf(Calendar.getInstance().getTime().getTime()).substring(0,10));
+        taskMap.put("timezone",TimeZone.getDefault().getID());
         taskMap.put("page","");
         taskMap.put("opened","true");
         taskMap.put("idle_time",0);
         taskMap.put("max_idle_time",0);
         taskMap.put("names","Emalify-mobile-sdk");
-        taskMap.put("meta", Calendar.getInstance().getTime().getTime());
+        taskMap.put("meta",  String.valueOf(Calendar.getInstance().getTime().getTime()).substring(0,10));
         taskMap.put("email", getEmail());
-        taskMap.put("token", FirebaseInstanceId.getInstance(FirebaseApp.getInstance("summer-branch-251314")).getToken());
         query.set(taskMap).addOnSuccessListener(new OnSuccessListener<Void>() {
             @Override
             public void onSuccess(Void aVoid) {
@@ -310,43 +293,45 @@ public class Supportify extends AppCompatActivity {
             }
         });
     }
-//listens to the input
-    public void init() {
-        FirebaseApp secondApp = FirebaseApp.getInstance("summer-branch-251314");
-        FirebaseFirestore sec = FirebaseFirestore.getInstance(secondApp);
+    //listens to the input
+    private void init() {
+        FirebaseApp secondApp = FirebaseApp.getInstance("emalifychat");
+        final FirebaseFirestore sec = FirebaseFirestore.getInstance(secondApp);
         sec.collection("messages")
-                .whereEqualTo("channel","mobile-sdk").
-                whereEqualTo("email", getEmail()).
-                orderBy("created_at").limit(250)
+                .whereEqualTo("contact_id",senderId+Key_2).
+                orderBy("message_id").limit(150)
                 .addSnapshotListener(
                         new EventListener<QuerySnapshot>() {
                             @Override
                             public void onEvent(QuerySnapshot queryDocumentSnapshots, FirebaseFirestoreException e) {
-                                if(!intialize)
+                                //check whether the database is empty.
+                                if(!queryDocumentSnapshots.isEmpty())
                                 {
-                                    //  intialize = true;
-                                    if(!queryDocumentSnapshots.isEmpty())
-                                    {
-                                        if (e != null) {
-                                            Log.w( "listen:error:  *** **", e);
-                                            return;
-                                        }
-                                        for (DocumentChange dc : queryDocumentSnapshots.getDocumentChanges()) {
-                                            switch (dc.getType() ) {
-                                                case ADDED:
-                                                    i++;
+                                    if (e != null) {
+                                        Log.w( "listen:error:  *** **", e);
+                                        return;
+                                    }
+                                    for (DocumentChange dc : queryDocumentSnapshots.getDocumentChanges()) {
+                                        switch (dc.getType() ) {
+                                            case ADDED:
+                                                i++;
+                                                try {
                                                     Message message = queryDocumentSnapshots.toObjects(MessagePojo.class).get(i).getM();
-                                                    if (adapter != null) {
+                                                    if(adapter != null)
+                                                    {
                                                         adapter.addToStart(message, true);
                                                     }
                                                     break;
-                                            }
+                                                }
+                                                catch (IllegalAccessError w)
+                                                {
+                                                    Toast.makeText(getApplicationContext(),"Error occurred.",Toast.LENGTH_SHORT).show();
+                                                }
                                         }
                                     }
-                                    else
-                                    {
-                                        Toast.makeText(getApplicationContext(),"Welcome,type something to begin chat.",Toast.LENGTH_SHORT).show();
-                                    }
+                                }
+                                else{
+                                    Toast.makeText(getApplicationContext(),"Welcome,type something to begin chat.",Toast.LENGTH_SHORT).show();
                                 }
                             }
                         });
@@ -393,14 +378,13 @@ public class Supportify extends AppCompatActivity {
             }
         });
     }
-
-//to send a message to the database
-    public void sendMessage(String message, boolean isImage) {
+    //to send a message to the database
+    private void sendMessage(String message, boolean isImage) {
 
         //get timestamp
         SimpleDateFormat simpleDateFormat  = new SimpleDateFormat("YYYY-MM-DD HH:mm:ss ");
         String format = simpleDateFormat.format(new Date());
-        FirebaseApp secondApp = FirebaseApp.getInstance("summer-branch-251314");
+        FirebaseApp secondApp = FirebaseApp.getInstance("emalifychat");
         FirebaseFirestore sec = FirebaseFirestore.getInstance(secondApp);
         CollectionReference reference =sec.collection("messages");
         //text
@@ -408,7 +392,7 @@ public class Supportify extends AppCompatActivity {
         //image
         String tests = message;
         //type selection
-         String type = "";
+        String type = "";
         if(isImage)
         {
             test = null;
@@ -419,38 +403,39 @@ public class Supportify extends AppCompatActivity {
             tests = null;
             type = "text";
         }
+        boolean intialize = false;
         // Add a new document with a generated id.
         Map<String, Object> data = new HashMap<>();
         data.put("name", getName());
         data.put("email", getEmail());
-        data.put("channel", "mobile-sdk");
-        data.put("contact_id", getName());
+        data.put("channel", "mobilechat");
+        data.put("contact_id", senderId+Key_2);
         data.put("message", test);
         data.put("text", test);
         data.put("file", "");
         data.put("image",tests);
-        data.put("meta",   Calendar.getInstance().getTime().getTime());
-        data.put("date",  format);
-        data.put("isAdmin",  "false");
-        data.put("message_id",  Calendar.getInstance().getTime().getTime());
+        data.put("meta", String.valueOf(Calendar.getInstance().getTimeInMillis()).substring(0,10));
+        data.put("date", format);
+        data.put("isAdmin",  intialize );
+        data.put("message_id", String.valueOf(Calendar.getInstance().getTimeInMillis()).substring(0,10));
         data.put("type",  type);
         data.put("author",getName());
-        data.put("contact_id",  "");
-        data.put("customer_account",  "");
-        data.put("created_at", Calendar.getInstance().getTime().getTime());
-        data.put("createdAt", Calendar.getInstance().getTime().getTime());
+        data.put("customer_account",  Integer.parseInt(Key_2));
+        data.put("created_at", String.valueOf(Calendar.getInstance().getTimeInMillis()).substring(0,10));
+        data.put("createdAt", String.valueOf(Calendar.getInstance().getTimeInMillis()).substring(0,10));
         data.put("id", senderId);
         reference.document().set(data);
 
+
+
     }
-//to send a picture to database.
+    //to send a picture to database.
     @Override
     public void onActivityResult(int requestCode, int resultCode, Intent data) {
         super.onActivityResult(requestCode, resultCode, data);
         if (requestCode == 9632 && resultCode == RESULT_OK) {
             List<Uri> mSelected = Matisse.obtainResult(data);
-
-            FirebaseApp secondApp = FirebaseApp.getInstance("summer-branch-251314");
+            FirebaseApp secondApp = FirebaseApp.getInstance("emalifychat");
             FirebaseStorage ces = FirebaseStorage.getInstance(secondApp);
             final UploadTask uploadTask;
             uploadTask =  ces.getReference("uploads/"+senderId+Calendar.getInstance().getTime().getTime()).putFile(mSelected.get(0));
@@ -468,7 +453,6 @@ public class Supportify extends AppCompatActivity {
             });
         }
     }
-
     //request for accessing the mobile local gallery
     @Override
     public void onRequestPermissionsResult(int requestCode,String permissions[], int[] grantResults) {
