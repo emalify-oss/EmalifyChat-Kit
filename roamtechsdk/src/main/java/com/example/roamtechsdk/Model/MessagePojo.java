@@ -2,7 +2,7 @@ package com.example.roamtechsdk.Model;
 
 import com.google.firebase.database.Exclude;
 
-import java.util.Date;
+import java.sql.Date;
 
 import androidx.annotation.Keep;
 
@@ -20,6 +20,8 @@ public class MessagePojo  {
 
     String contact_id;
     String message;
+
+
 
     public String getMessage() {
         return message;
@@ -55,27 +57,18 @@ public class MessagePojo  {
     }
 
 
-
-
-    public String getIsAdmin() {
-        return isAdmin;
-    }
-
-    public void setIsAdmin(String isAdmin) {
-        this.isAdmin = isAdmin;
-    }
-
     String type;
 
-    public Long getMeta() {
+
+    public String getMeta() {
         return meta;
     }
 
-    public void setMeta(Long meta) {
+    public void setMeta(String meta) {
         this.meta = meta;
     }
 
-    Long meta;
+    String meta;
     String email;
 
     public String getAuthor() {
@@ -86,38 +79,32 @@ public class MessagePojo  {
         this.author = author;
     }
 
-    public String getCustomer_account() {
+
+    String author;
+
+    public Long getCustomer_account() {
         return customer_account;
     }
 
-    public void setCustomer_account(String customer_account) {
+    public void setCustomer_account(Long customer_account) {
         this.customer_account = customer_account;
     }
 
-    String author;
-    String customer_account;
+    Long customer_account;
     String date;
 
-    public Long getCreated_at() {
+
+    public String getCreated_at() {
         return created_at;
     }
 
-    public void setCreated_at(Long created_at) {
+    public void setCreated_at(String created_at) {
         this.created_at = created_at;
     }
 
-    Long created_at;
+    String created_at;
 
-    public Long getMessage_id() {
-        return message_id;
-    }
 
-    public void setMessage_id(Long message_id) {
-        this.message_id = message_id;
-    }
-
-    Long message_id;
-    String isAdmin;
 
     public String getContact_id() {
         return contact_id;
@@ -136,6 +123,7 @@ public class MessagePojo  {
     }
 
     String setID;
+
 
     public String getChannel() {
         return channel;
@@ -166,16 +154,33 @@ public class MessagePojo  {
         this.text = text;
     }
 
-    public void setCreatedAt(Long createdAt) {
-        this.createdAt = createdAt;
-    }
+
 
     public void setUser(AuthorPojo user) {
         this.user = user;
     }
 
-    Long createdAt;
+    public String getCreatedAt() {
+        return createdAt;
+    }
+
+    public void setCreatedAt(String createdAt) {
+        this.createdAt = createdAt;
+    }
+
+    String createdAt;
     AuthorPojo user;
+
+
+    public String getMessage_id() {
+        return message_id;
+    }
+
+    public void setMessage_id(String message_id) {
+        this.message_id = message_id;
+    }
+
+    String message_id;
 
 
     public String getId() {
@@ -190,11 +195,6 @@ public class MessagePojo  {
 
     public AuthorPojo getUser() {
         return user;
-    }
-
-
-    public Long getCreatedAt() {
-        return createdAt;
     }
 
     public String getName() {
@@ -213,29 +213,31 @@ public class MessagePojo  {
         this.file = file;
     }
 
+
+
     @Exclude
     public Message getM() {
-//        data.put("author", "Dennis");
-//        data.put("channel", "email");
-//        data.put("contact_id", "Dennis");
-//        data.put("file", "");
-//        data.put("type", "Text");
-//        data.put("meta",   Calendar.getInstance().getTime().getTime()  );
-//        data.put("message", message);
-//        data.put("created_at", Calendar.getInstance().getTime().getTime());
-//        data.put("setID", senderId);
+
         Message m=new Message();
-        m.setText(text);
-        m.setId(id);
-        m.setCreatedAt(new Date(createdAt));
-        m.setName(name);
+        m.setText(message);
+        // sort
+        if(id == null)
+        {
+            m.setId("id");
+        }else
+            m.setId(id);
+        m.setCreatedAt(new Date(Long.parseLong(message_id)*1000));
+        m.setName("name");
         m.setMessage(message);
         m.setContact_id(contact_id);
         m.setFile(file);
-        //   m.setCreatedAt(new Date(createdAt));
         Author a=new Author();
         a.setName(name);
-        a.setId(id);
+        if(id == null)
+        {
+            a.setId("id");
+        }else
+            a.setId(id);
         a.setAvatar(getImage());
         m.setUser(a);
         m.setImage(getImage());
