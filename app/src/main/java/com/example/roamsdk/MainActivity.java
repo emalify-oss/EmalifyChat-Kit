@@ -25,8 +25,8 @@ public class MainActivity extends AppCompatActivity {
                 int resId = getResources().getIdentifier("image_name", "drawable", getPackageName());
                 Intent myIntent = new Intent( MainActivity.this, Supportify.class );
                 myIntent.putExtra("Title", "Example");
-                myIntent.putExtra("Key_1", "nyzxtb0rj5ugo89");
-                myIntent.putExtra("Key_2", "70795");
+                myIntent.putExtra("Key_1", "Key from emalify");
+                myIntent.putExtra("Key_2", "number from emalify");
                 myIntent.putExtra("image_id_resource", resId );
                 myIntent.putExtra("StatusBar_Color", "#FF4081");
                 myIntent.putExtra("ToolBar_Color", "#FF4081");
