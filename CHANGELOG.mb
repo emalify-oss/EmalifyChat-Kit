@@ -1,2 +1,4 @@
+## 0.0.4(2020-03-31)
+Error: Android:theme in manifest creates conflict with app theme.
 ## 0.0.2 (2020-03-25)
 * RoamChat Android SDK first version
