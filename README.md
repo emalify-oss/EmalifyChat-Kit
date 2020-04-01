@@ -15,7 +15,7 @@ allprojects {
 App Module gradle file **(app/build.gradle)** 
 ```
 dependencies {
-     implementation 'com.github.emalify-oss:RoamChat-Kit:0.0.4'
+     implementation 'com.github.emalify-oss:RoamChat-Kit:0.0.5'
 }
 ```
 ## Updating to newer versions of SDK
