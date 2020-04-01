@@ -39,5 +39,9 @@ Intent myIntent = new Intent( MainActivity.this, Supportify.class );
                 myIntent.putExtra("StatusBar_Color", "#FF4081");
                 //Add the Toolbar colors
                 myIntent.putExtra("ToolBar_Color", "#FF4081");
+                //Add the username
+                myIntent.putExtra("name", "name here");
+                //add the users email
+                myIntent.putExtra("email", "email here");
                 startActivity(myIntent);
 ```
