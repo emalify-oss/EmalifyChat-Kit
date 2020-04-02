@@ -68,7 +68,7 @@
                 android:id="@+id/your_title"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:text="Powered by RoamTech"
+                android:text="Powered by Emalify"
                 android:textSize="7.5dp"
                 android:textColor="#fff"
                 android:layout_centerInParent="true"
