@@ -222,15 +222,17 @@ public class MessagePojo  {
 
         Message m=new Message();
         Author a=new Author();
-        if(getImage()==null)
+        if(getImage()==null || getImage() == "")
         {
             m.setText(message);
             m.setMessage(message);
         }
         else
         {
-                m.setText(null);
-                m.setMessage(null);
+            m.setText(null);
+            m.setMessage(null);
+            m.setImage(getImage());
+            a.setAvatar(getImage());
             }
 
         // sort
@@ -250,9 +252,7 @@ public class MessagePojo  {
             a.setId("id");
         }else
             a.setId(id);
-        a.setAvatar(getImage());
         m.setUser(a);
-        m.setImage(getImage());
         return m;
     }
 }
