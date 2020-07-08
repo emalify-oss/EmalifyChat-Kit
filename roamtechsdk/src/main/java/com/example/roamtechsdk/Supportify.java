@@ -33,7 +33,6 @@ import com.google.firebase.auth.FirebaseUser;
 import com.google.firebase.firestore.CollectionReference;
 import com.google.firebase.firestore.DocumentChange;
 import com.google.firebase.firestore.DocumentReference;
-import com.google.firebase.firestore.DocumentSnapshot;
 import com.google.firebase.firestore.EventListener;
 import com.google.firebase.firestore.FieldValue;
 import com.google.firebase.firestore.FirebaseFirestore;
@@ -289,27 +288,28 @@ public class Supportify extends AppCompatActivity {
         taskMap.put("names","Emalify-mobile-sdk");
         taskMap.put("meta",  String.valueOf(Calendar.getInstance().getTime().getTime()).substring(0,10));
         taskMap.put("email", getEmail());
-
-        query.get().addOnCompleteListener(new OnCompleteListener<DocumentSnapshot>() {
+        query.set(taskMap).addOnSuccessListener(new OnSuccessListener<Void>() {
             @Override
-            public void onComplete(@NonNull Task<DocumentSnapshot> task) {
-                if (task.isSuccessful()) {
-                    DocumentSnapshot document = task.getResult();
-                    if (document.exists()) {
-                    }
-                    else {
-                        query.set(taskMap).addOnSuccessListener(new OnSuccessListener<Void>() {
-                            @Override
-                            public void onSuccess(Void aVoid) {
-                                query.update("status", FieldValue.serverTimestamp());
-                            }
-                        });
-                    }
-                } else {
-
-                }
+            public void onSuccess(Void aVoid) {
+                query.update("status", FieldValue.serverTimestamp());
             }
         });
+
+//        query.get().addOnCompleteListener(new OnCompleteListener<DocumentSnapshot>() {
+//            @Override
+//            public void onComplete(@NonNull Task<DocumentSnapshot> task) {
+//                if (task.isSuccessful()) {
+//                    DocumentSnapshot document = task.getResult();
+//                    if (document.exists()) {
+//                    }
+//                    else {
+//
+//                    }
+//                } else {
+//
+//                }
+//            }
+//        });
 
     }
     //listens to the input
