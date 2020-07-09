@@ -1,6 +1,10 @@
+## 0.0.8(2020-07-09)
+Bug: Agents messages can't be received by the User
+## 0.0.7(2020-07-03)
+Bug: Agent isn't capable of viewing Users Picture text and vice-versa
 ## 0.0.6(2020-04-02)
 Bug: Default background image failed loading properly
-## 0.0.5(2020-04-1)
+## 0.0.5(2020-04-01)
 Bug: Remove the dialog for name & email
 ## 0.0.4(2020-03-31)
 Bug: Android:theme in manifest creates conflict with app theme.
