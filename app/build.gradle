@@ -1,0 +1,98 @@
+{
+  "project_info": {
+    "project_number": "677565980513",
+    "firebase_url": "https://emalifychat.firebaseio.com",
+    "project_id": "emalifychat",
+    "storage_bucket": "emalifychat.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:677565980513:android:1342f1bc8ac6f756ddaf20",
+        "android_client_info": {
+          "package_name": "com.roamtech.emalify"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "677565980513-1tdukdqj7ivbrnsjopsn6ndqehjtopm3.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyBFliq3oTDIVSFrnrFQjqcLO5IHLvBPhgo"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": [
+            {
+              "client_id": "677565980513-1tdukdqj7ivbrnsjopsn6ndqehjtopm3.apps.googleusercontent.com",
+              "client_type": 3
+            }
+          ]
+        }
+      }
+    },
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:677565980513:android:6a33d11c7a38d57fddaf20",
+        "android_client_info": {
+          "package_name": "com.roamtech.emalifysdk"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "677565980513-1tdukdqj7ivbrnsjopsn6ndqehjtopm3.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyBFliq3oTDIVSFrnrFQjqcLO5IHLvBPhgo"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": [
+            {
+              "client_id": "677565980513-1tdukdqj7ivbrnsjopsn6ndqehjtopm3.apps.googleusercontent.com",
+              "client_type": 3
+            }
+          ]
+        }
+      }
+    },
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:677565980513:android:a950e0adabeac3ffddaf20",
+        "android_client_info": {
+          "package_name": "emalify.mobile.native"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "677565980513-1tdukdqj7ivbrnsjopsn6ndqehjtopm3.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyBFliq3oTDIVSFrnrFQjqcLO5IHLvBPhgo"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": [
+            {
+              "client_id": "677565980513-1tdukdqj7ivbrnsjopsn6ndqehjtopm3.apps.googleusercontent.com",
+              "client_type": 3
+            }
+          ]
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}
